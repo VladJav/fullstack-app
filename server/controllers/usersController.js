@@ -1,8 +1,12 @@
 import User from "../models/User.js";
+import jwt, {verify} from "jsonwebtoken";
+
 
 
 export async function getUsers (req, res, next) {
+
     try{
+        console.log(req.userId)
         const {page = 1, limit = 20} = req.query;
         const users = await User.find()
             .select('-__v')
@@ -39,8 +43,12 @@ export async function createUser(req, res, next) {
             error.status = 400;
             throw error;
         }
+
         user = new User({email, password});
+        user.token = jwt.sign({_id: user._id}, process.env.SECRET_TOKEN);
+
         await user.save()
+        res.cookie("auth-token", user.token, {httpOnly:true})
         res.json(user.toObject({ versionKey: false }))
     }
     catch (e){

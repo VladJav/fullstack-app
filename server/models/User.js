@@ -9,9 +9,13 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true,
-        minLength: 8,
-        maxLength:20
     },
+    token: String,
+    roles:{
+        type: [String],
+        required: true,
+        default: ['regular']
+    }
 
 })
 export default model("User", userSchema)
