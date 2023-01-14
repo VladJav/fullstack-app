@@ -34,7 +34,7 @@ export async function registerUser(req,res,next){
         const cryptPassword = await hash(password, 10)
 
         user = new User({email, password: cryptPassword});
-        user.token = jwt.sign({_id: user._id}, process.env.SECRET_TOKEN);
+        user.token = jwt.sign({_id: user._id, roles:['regular']}, process.env.SECRET_TOKEN);
 
         await user.save()
         res.cookie("auth-token", user.token, {httpOnly:true})
@@ -57,7 +57,7 @@ export async function registerAdmin(req,res,next){
         const cryptPassword = await hash(password, 10)
 
         user = new User({email, password: cryptPassword, roles:["admin"]});
-        user.token = jwt.sign({_id: user._id}, process.env.SECRET_TOKEN);
+        user.token = jwt.sign({_id: user._id, roles: ["admin"]}, process.env.SECRET_TOKEN);
 
         await user.save()
         res.cookie("auth-token", user.token, {httpOnly:true})

@@ -7,12 +7,14 @@ import cookieParser from "cookie-parser"
 import cors from 'cors'
 import {authRouter} from "./routes/authRouter.js";
 
+
 dotenv.config()
 const app = express()
 
 const port = 3000;
 set("strictQuery", false);
 connect(process.env.MONGO_URL)
+
 
 
 app.use(express.json())

@@ -1,5 +1,5 @@
 import express from "express";
-import {createUser, deleteUser, getUser, getUsers, updateUser} from "../controllers/usersController.js";
+import { deleteUser, getUser, getUsers, updateUser} from "../controllers/usersController.js";
 import {authenticateToken} from "../middlewares/authenticateToken.js";
 
 const router = express.Router()
@@ -8,7 +8,6 @@ router.use(authenticateToken);
 
 router.get("/", getUsers)
 router.get("/:userId", getUser)
-router.post("/", createUser)
 router.delete("/:userId", deleteUser)
 router.put("/:userId",updateUser)
 

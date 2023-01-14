@@ -13,8 +13,7 @@ const userSchema = new Schema({
     token: String,
     roles:{
         type: [String],
-        required: true,
-        default: ['regular']
+        default: ["regular"]
     }
 
 })

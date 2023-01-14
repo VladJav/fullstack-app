@@ -1,15 +1,10 @@
 import User from "../models/User.js";
-import jwt, {verify} from "jsonwebtoken";
-
-
 
 export async function getUsers (req, res, next) {
 
     try{
-        console.log(req.userId)
         const {page = 1, limit = 20} = req.query;
-        const users = await User.find()
-            .select('-__v')
+        const users = await User.find({}, "email _id")
             .limit(limit)
             .skip((page-1) * limit)
             .exec()
@@ -26,7 +21,7 @@ export async function getUsers (req, res, next) {
 }
 export async function getUser (req, res, next) {
     try{
-        res.json(await User.findById(req.params.userId).select('-__v'))
+        res.json(await User.findById(req.params.userId, "email _id"))
     }
     catch (e){
         e.message = "User not found";
@@ -34,29 +29,17 @@ export async function getUser (req, res, next) {
         next(e)
     }
 }
-export async function createUser(req, res, next) {
-    try{
-        const {email, password} = req.body
-        let user = await User.findOne({ email });
-        if (user) {
-            const error = new Error("User already registered.");
-            error.status = 400;
-            throw error;
-        }
 
-        user = new User({email, password});
-        user.token = jwt.sign({_id: user._id}, process.env.SECRET_TOKEN);
-
-        await user.save()
-        res.cookie("auth-token", user.token, {httpOnly:true})
-        res.json(user.toObject({ versionKey: false }))
-    }
-    catch (e){
-        next(e)
-    }
-}
 export async function updateUser(req, res, next) {
     try{
+        let id = req.userId;
+
+        if(req.roles.includes('admin')) id = req.params.userId;
+        if(id!==req.params.userId){
+            const error = new Error("You do not have enough permissions. Access is denied")
+            error.status = 403;
+            throw error
+        }
         const user = await User.findByIdAndUpdate(req.params.userId, req.body, {
             new: true,
             runValidators: true
@@ -66,7 +49,7 @@ export async function updateUser(req, res, next) {
             error.status = 404;
             throw error;
         }
-        res.json(user)
+        res.sendStatus(204)
     }
     catch (e){
         next(e)
@@ -75,12 +58,21 @@ export async function updateUser(req, res, next) {
 }
 export async function deleteUser (req, res, next) {
     try{
-        const user = await User.findOneAndDelete({_id: req.params.userId});
+        let id = req.userId;
+
+        if(req.roles.includes('admin')) id = req.params.userId;
+        if(id!==req.params.userId){
+            const error = new Error("You do not have enough permissions. Access is denied")
+            error.status = 403;
+            throw error
+        }
+        const user = await User.findOneAndDelete({_id: id})
         if(!user){
             const error = new Error('User not found');
             error.status = 404;
             throw error;
         }
+        res.clearCookie("auth-token");
         res.sendStatus(204)
     }
     catch (e){
