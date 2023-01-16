@@ -10,11 +10,10 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    token: String,
     roles:{
         type: [String],
         default: ["regular"]
-    }
+    },
 
 })
 export default model("User", userSchema)
