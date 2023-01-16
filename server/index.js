@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser"
 import cors from 'cors'
 import {authRouter} from "./routes/authRouter.js";
 import {postsRouter} from "./routes/postsRouter.js";
+import Post from "./models/Post.js";
 
 
 dotenv.config()
@@ -19,7 +20,7 @@ connect(process.env.MONGO_URL)
 app.use(express.json())
 app.use(cookieParser())
 
-app.user("/api/v1/posts", postsRouter)
+app.use("/api/v1/posts", postsRouter)
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/users", userRouter)
 app.use((req,res,next)=>{

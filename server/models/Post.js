@@ -1,15 +1,29 @@
 import {model, Schema} from "mongoose";
 
 const postSchema = new Schema({
-    title: String,
-    content: String,
+    title: {
+        type:String,
+        required:true
+    },
+    content: {
+        type:String,
+        required:true
+    },
     votes: {
         type: Number,
         default: 0
     },
     user:{
-        type: Schema.Types.ObjectId,
-        ref: "User"
+        _id: {
+            required: true,
+            type: Schema.Types.ObjectId
+        },
+        email: {
+            type: String,
+            required: true,
+            match: [/^.+@(?:[\w-]+\.)+\w+$/],
+        },
     }
 })
+
 export default model("Post", postSchema)
