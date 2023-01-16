@@ -8,6 +8,6 @@ postsRouter.get("/", getPosts);
 postsRouter.get("/:postId", getPost);
 postsRouter.post("/", authenticateToken, createPost);
 postsRouter.put("/:postId", updatePost)
-postsRouter.delete("/:postId", deletePost);
+postsRouter.delete("/:postId",authenticateToken, deletePost);
 
 export {postsRouter}
