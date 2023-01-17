@@ -1,7 +1,5 @@
-import Post from "../models/Post.js";
-import User from "../models/User.js";
-import {getPostById, getPostsTemplate} from "../services/postsService.js";
-import {checkAdminPermissions} from "../utils/checkAdminPermissions.js";
+
+import {deletePostById, getPostById, getPostsTemplate, savePost, updatePostById} from "../services/postsService.js";
 
 export async function getPosts(req, res, next){
     try {
@@ -25,18 +23,24 @@ export async function getPost(req, res, next){
     }
 }
 export async function updatePost(req, res, next){
-
+    try {
+        const { title, content} = req.body;
+        const {userId, roles} = req;
+        const postId = req.params.postId;
+        await updatePostById({userId, roles}, {title, content}, postId)
+        res.sendStatus(204)
+    }
+    catch (e) {
+        next(e);
+    }
 }
 export async function createPost(req, res, next){
     try{
         const {title, content} = req.body;
+        const creatorId = req.userId;
+        const createdPost = await savePost(creatorId, {title, content})
 
-        const user = await User.findById(req.userId);
-        const post = new Post({title, content, user});
-
-        await post.save();
-
-        res.json(post)
+        res.json(createdPost)
     }
     catch (e){
         next(e);
@@ -46,18 +50,10 @@ export async function createPost(req, res, next){
 
 export async function deletePost(req, res, next){
     try{
-        const post =  await getPostById(req.params.postId);
-
-        if(!post){
-            const error = new Error('Post not found');
-            error.status = 404;
-            throw error;
-        }
-
-        checkAdminPermissions(req.roles, req.userId, post.user._id.toString())
-
-        await Post.deleteOne({_id:req.params.postId})
-        res.sendStatus(204);
+        const {userId, roles} = req;
+        const postId = req.params.postId;
+        await deletePostById({userId, roles}, postId)
+        res.sendStatus(204)
     }
     catch (e){
         next(e);
