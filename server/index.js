@@ -6,18 +6,20 @@ import {errorHandler} from "./middlewares/errorHandler.js";
 import cookieParser from "cookie-parser"
 import {authRouter} from "./routes/authRouter.js";
 import {postsRouter} from "./routes/postsRouter.js";
-
+import {serve, setup} from "swagger-ui-express";
+import {swaggerSpec} from "./config/swaggerSpec.js";
 
 dotenv.config()
 const app = express()
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 set("strictQuery", false);
 connect(process.env.MONGO_URL)
 
 app.use(express.json())
 app.use(cookieParser())
 
+app.use("/docs", serve, setup(swaggerSpec))
 app.use("/api/v1/posts", postsRouter)
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/users", userRouter)
