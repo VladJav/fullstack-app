@@ -6,7 +6,7 @@ export async function authenticateToken(req,res,next){
         const encoded = await verify(token, process.env.SECRET_TOKEN);
         req.userId = encoded._id;
         req.roles = encoded.roles;
-        next()
+        next();
     }
     catch (e){
         e.status = 401;
