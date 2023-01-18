@@ -9,6 +9,9 @@ import {postsRouter} from "./routes/postsRouter.js";
 import {serve, setup} from "swagger-ui-express";
 import {swaggerSpec} from "./config/swaggerSpec.js";
 
+// process.env.SECRET_TOKEN = 9068dce0a41f2f7058ea9ddf791c622ec60a253abea9aa966f50852dcab7e3f89bdb0c01ac4e31b7bb3ee1181a4b6127e6a2e97417a651bbc0cb0a1f88265a4d
+
+
 dotenv.config()
 const app = express()
 
