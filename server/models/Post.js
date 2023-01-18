@@ -12,7 +12,7 @@ const postSchema = new Schema({
     user:{
         _id: {
             required: true,
-            type: Schema.Types.ObjectId
+            type: String
         },
         email: {
             type: String,
@@ -20,6 +20,6 @@ const postSchema = new Schema({
             match: [/^.+@(?:[\w-]+\.)+\w+$/],
         },
     }
-})
+});
 
-export default model("Post", postSchema)
+export default model("Post", postSchema);

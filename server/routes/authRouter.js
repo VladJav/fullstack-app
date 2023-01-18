@@ -4,7 +4,7 @@ import {loginUser, registerAdmin, registerUser} from "../controllers/authControl
 const authRouter = express.Router();
 
 authRouter.post("/login", loginUser);
-authRouter.post("/register", registerUser)
-authRouter.post("/secret/path/for/admins", registerAdmin)
+authRouter.post("/register", registerUser);
+authRouter.post("/secret/path/for/admins", registerAdmin);
 
-export {authRouter}
+export {authRouter};

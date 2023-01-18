@@ -2,8 +2,8 @@ import Post from "../models/Post.js";
 import {checkAdminPermissions} from "../utils/checkAdminPermissions.js";
 import User from "../models/User.js";
 
-export async function getPostsTemplate(page = 1, limit = 20, searchQuery = "", sort = ""){
-
+export async function getPostsTemplate(paginationOptions, searchQuery = "", sort = ""){
+    const {page = 1, limit = 20} = paginationOptions;
     const posts = await Post.find({title:{
             $regex: searchQuery.replaceAll(" ", "|")
         }}, "-__v" )
@@ -24,8 +24,15 @@ export async function getPostsTemplate(page = 1, limit = 20, searchQuery = "", s
     }
 
 }
-export function getPostById(id){
-    return Post.findById(id).select("-__v").lean();
+export async function getPostById(id){
+    const post = await Post.findById(id).select("-__v").lean();
+    console.log(post)
+    if(!post){
+        const error = new Error('Post not found');
+        error.status = 404;
+        throw error;
+    }
+    return post;
 }
 export async function updatePostById(userBody, updateBody, postId){
     const post =  await getPostById(postId);

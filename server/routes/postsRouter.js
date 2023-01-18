@@ -7,7 +7,7 @@ const postsRouter = express.Router();
 postsRouter.get("/", getPosts);
 postsRouter.get("/:postId", getPost);
 postsRouter.post("/", authenticateToken, createPost);
-postsRouter.put("/:postId",authenticateToken, updatePost)
+postsRouter.put("/:postId",authenticateToken, updatePost);
 postsRouter.delete("/:postId",authenticateToken, deletePost);
 
 export {postsRouter}

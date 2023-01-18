@@ -4,9 +4,10 @@ import {deleteById, getAllUsers, getUserById, updateById} from "../services/user
 export async function getUsers (req, res, next) {
 
     try{
-        let projection = "-token -roles -password  -__v"
-        if(req.roles.includes("admin")) projection = ""
-        res.json(await getAllUsers(req.query, projection))
+        let projection = "-token -roles -password  -__v";
+        const {page, title, sort} = req.query;
+        if(req.roles.includes("admin")) projection = "";
+        res.json(await getAllUsers({page, title}, projection, sort));
     }
     catch (e){
         next(e);
@@ -14,26 +15,19 @@ export async function getUsers (req, res, next) {
 }
 export async function getUser (req, res, next) {
     try{
-        res.json(await getUserById(req.params.userId))
+        res.json(await getUserById(req.params.userId));
     }
     catch (e){
-        e.message = "User not found";
-        e.status = 404;
         next(e);
     }
 }
 
 export async function updateUser(req, res, next) {
     try{
-        let id = req.userId;
+        let id = req.params.userId;
         const {email, password} = req.body;
-        if(req.roles.includes('admin')) id = req.params.userId;
-        if(id!==req.params.userId){
-            const error = new Error("You do not have enough permissions. Access is denied")
-            error.status = 403;
-            throw error;
-        }
-        await updateById(id, {email,password});
+
+        await updateById({roles: req.roles, userId:req.userId}, {email,password}, id);
         res.sendStatus(204);
     }
     catch (e){
@@ -45,14 +39,10 @@ export async function deleteUser (req, res, next) {
     try{
         let id = req.userId;
 
-        if(req.roles.includes('admin')) id = req.params.userId;
-        if(id!==req.params.userId){
-            const error = new Error("You do not have enough permissions. Access is denied")
-            error.status = 403;
-            throw error
-        }
-        await deleteById(id);
-        res.clearCookie("auth-token");
+        await deleteById(id, {userId:req.userId, roles :req.roles});
+
+        if(req.roles.includes("regular")) res.clearCookie("auth-token");
+
         res.sendStatus(204);
     }
     catch (e){

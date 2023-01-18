@@ -4,10 +4,8 @@ import * as dotenv from 'dotenv'
 import {connect,set} from "mongoose";
 import {errorHandler} from "./middlewares/errorHandler.js";
 import cookieParser from "cookie-parser"
-import cors from 'cors'
 import {authRouter} from "./routes/authRouter.js";
 import {postsRouter} from "./routes/postsRouter.js";
-import Post from "./models/Post.js";
 
 
 dotenv.config()
@@ -30,5 +28,5 @@ app.use((req,res,next)=>{
 })
 app.use(errorHandler)
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`App listening on port ${port}`)
 })

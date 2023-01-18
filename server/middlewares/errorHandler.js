@@ -4,5 +4,5 @@ export function errorHandler(err, req, res, next){
             status: err.status || 500,
             message: err.message
         }
-    })
+    });
 }
