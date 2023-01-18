@@ -14,7 +14,7 @@ const app = express()
 
 const port = process.env.PORT || 3000;
 set("strictQuery", false);
-connect(process.env.MONGO_URL)
+connect(process.env.MONGO_URL) //mongodb://127.0.0.1:27017/blog-app
 
 app.use(express.json())
 app.use(cookieParser())
