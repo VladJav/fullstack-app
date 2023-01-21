@@ -3,6 +3,6 @@ export function checkAdminPermissions(roles, userId, checkId){
     else if(userId!==checkId){
         const error = new Error("You do not have enough permissions. Access is denied")
         error.status = 403;
-        throw error
+        throw error;
     }
 }
