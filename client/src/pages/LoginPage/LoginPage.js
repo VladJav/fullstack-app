@@ -1,30 +1,36 @@
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
+import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Copyright } from '../components/Copyright';
-import LoginField from '../components/LoginField/LoginField';
-import PasswordField from '../components/PasswordField/PasswordField';
-import { loginUser } from '../services/usersService/loginUser';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import PasswordField from '../../components/PasswordField/PasswordField';
+import LoginField from '../../components/LoginField/LoginField';
+import { loginUser } from '../../services/usersService';
+import { Copyright } from '../../components/Copyright';
 
 const theme = createTheme();
 export default function SignIn() {
+    const navigate = useNavigate();
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const [emailInput, , passwordInput] = event.currentTarget.elements;
-        if (emailInput.attributes['aria-invalid'].value && passwordInput.attributes['aria-invalid'].value) {
-            await loginUser(data.get('email'), data.get('password'));
+        if (emailInput.attributes['aria-invalid'].value === 'false' && passwordInput.attributes['aria-invalid'].value === 'false') {
+            try {
+                await loginUser(data.get('email'), data.get('password'));
+                navigate('/');
+            } catch (e) {
+                alert('Bad input');
+            }
         }
-        return false;
     };
     return (
         <ThemeProvider theme={theme}>
