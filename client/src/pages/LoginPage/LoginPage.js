@@ -6,11 +6,10 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
+import { useState } from 'react';
 import PasswordField from '../../components/PasswordField/PasswordField';
 import LoginField from '../../components/LoginField/LoginField';
 import { loginUser } from '../../services/usersService';
@@ -19,6 +18,7 @@ import { Copyright } from '../../components/Copyright';
 const theme = createTheme();
 export default function SignIn() {
     const navigate = useNavigate();
+    const [signMessage, setSignMessage] = useState('');
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -28,7 +28,7 @@ export default function SignIn() {
                 await loginUser(data.get('email'), data.get('password'));
                 navigate('/');
             } catch (e) {
-                alert('Bad input');
+                setSignMessage('Bad password or email');
             }
         }
     };
@@ -71,10 +71,16 @@ export default function SignIn() {
                           id="password"
                           autoComplete="current-password"
                         />
-                        <FormControlLabel
-                          control={<Checkbox value="remember" color="primary" />}
-                          label="Remember me"
-                        />
+                        <Grid container justifyContent="center">
+                            <Grid
+                              item
+                              sx={{
+                                    color: '#f44336',
+                                }}
+                            >
+                                {signMessage}
+                            </Grid>
+                        </Grid>
                         <Button
                           type="submit"
                           fullWidth

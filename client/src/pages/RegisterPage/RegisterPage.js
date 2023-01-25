@@ -28,7 +28,7 @@ export default function SignUp() {
                 await registerUser(data.get('email'), data.get('password'));
                 navigate('/');
             } catch (e) {
-                alert('Bad input');
+                console.log(e);
             }
         }
     };
