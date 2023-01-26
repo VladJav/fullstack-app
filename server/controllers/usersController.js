@@ -15,7 +15,8 @@ export async function getUsers (req, res, next) {
 }
 export async function getUser (req, res, next) {
     try{
-        res.json(await getUserById(req.params.userId));
+        const {page, limit} = req.query;
+        res.json(await getUserById(req.params.userId, {page, limit}));
     }
     catch (e){
         next(e);

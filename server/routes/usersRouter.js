@@ -4,7 +4,6 @@ import {authenticateToken} from "../middlewares/authenticateToken.js";
 
 const router = express.Router();
 
-router.use(authenticateToken);
 /**
  * @swagger
  * /api/v1/users:
@@ -14,8 +13,8 @@ router.use(authenticateToken);
  */
 router.get("/", getUsers);
 router.get("/:userId", getUser);
-router.delete("/:userId", deleteUser);
-router.put("/:userId",updateUser);
+router.delete("/:userId",authenticateToken, deleteUser);
+router.put("/:userId",authenticateToken,updateUser);
 
 export {router as userRouter}
 

@@ -8,6 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import jwtDecode from 'jwt-decode';
 
 const settings = ['Profile', 'Logout'];
 
@@ -24,7 +25,9 @@ export default function UserMenu() {
             navigate('/login');
             Cookies.remove('auth-token');
         } else if (setting === 'Profile') {
-            navigate('/profile');
+            const token = Cookies.get('auth-token');
+            const { _id } = jwtDecode(token);
+            navigate(`/profile/${_id}`);
         }
         setAnchorElUser(null);
     };

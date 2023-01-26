@@ -7,6 +7,7 @@ import '@fontsource/roboto/700.css';
 import { SignUp } from './pages/RegisterPage';
 import { SignIn } from './pages/LoginPage';
 import { HomePage } from './pages/HomePage';
+import { ProfilePage } from './pages/ProfilePage';
 
 function App() {
     const router = createBrowserRouter([
@@ -21,6 +22,10 @@ function App() {
         {
             path: '/register',
             element: <SignUp />,
+        },
+        {
+            path: '/profile/:profileId',
+            element: <ProfilePage />,
         },
     ]);
     return (
