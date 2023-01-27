@@ -34,6 +34,7 @@ export async function updateById(userBody, updateBody, id){
 }
 export async function getUserById(id, paginationOptions){
     const {page = 1, limit = 20} = paginationOptions;
+
     const user = await User.findById(id, "-token -roles -password -__v").lean();
     if(!user){
         const error = new Error('User not found');
@@ -46,6 +47,7 @@ export async function getUserById(id, paginationOptions){
     const posts = await Post.find({"user._id":user._id+""}, "-user")
         .limit(limit)
         .skip((page-1) * limit)
+        .sort("-created")
         .lean();
     return {
         user:{

@@ -26,7 +26,6 @@ export async function getPostsTemplate(paginationOptions, searchQuery = "", sort
 }
 export async function getPostById(id){
     const post = await Post.findById(id).select("-__v").lean();
-    console.log(post)
     if(!post){
         const error = new Error('Post not found');
         error.status = 404;

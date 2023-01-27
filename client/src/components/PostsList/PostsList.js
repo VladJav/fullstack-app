@@ -9,7 +9,7 @@ export default function PostsList() {
     const [page, setPage] = useState(2);
     const [hasMore, setHasMore] = useState(true);
     useEffect(() => {
-        axios.get('http://localhost:8000/api/v1/posts')
+        axios.get('http://localhost:8000/api/v1/posts?sort=-created')
             .then((res) => res.data.posts)
             .then((post) => { setPosts(posts.concat(post)); });
         // eslint-disable-next-line react-hooks/exhaustive-deps
