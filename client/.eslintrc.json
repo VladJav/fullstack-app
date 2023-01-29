@@ -1,0 +1,14 @@
+{
+  "extends": ["react-app", "react-app/jest", "prettier", "airbnb", "airbnb/hooks", "plugin:react/jsx-runtime"],
+  "rules": {
+    "global-require": "off",
+    "no-inner-declarations": "off",
+    "react/jsx-filename-extension": [0],
+    "indent": "off",
+    "react/jsx-indent" : [0],
+    "import/prefer-default-export": "off",
+    "import/extensions": ["off", "ignorePackages"],
+    "react/jsx-props-no-spreading": "off",
+    "react/prop-types": "off"
+  }
+}

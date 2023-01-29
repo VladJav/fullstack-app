@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import Post from "../models/Post.js";
 import {checkAdminPermissions} from "../utils/checkAdminPermissions.js";
+import mongoose, {Mongoose} from "mongoose";
 
 export async function deleteById(id, userBody){
 
@@ -31,15 +32,32 @@ export async function updateById(userBody, updateBody, id){
         omitUndefined: true
     });
 }
-export async function getUserById(id){
-    const user =  User.findById(id, "-token -roles -password -__v").lean();
+export async function getUserById(id, paginationOptions){
+    const {page = 1, limit = 20} = paginationOptions;
 
+    const user = await User.findById(id, "-token -roles -password -__v").lean();
     if(!user){
         const error = new Error('User not found');
         error.status = 404;
         throw error;
     }
-    return user;
+    const count = await Post.find({"user._id":user._id+""}, "-__v" )
+        .count()
+        .lean();
+    const posts = await Post.find({"user._id":user._id+""}, "-user")
+        .limit(limit)
+        .skip((page-1) * limit)
+        .sort("-created")
+        .lean();
+    return {
+        user:{
+            ...user,
+            posts,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page
+        }
+
+    };
 }
 export async function getAllUsers(paginationOptions, projection, sort=""){
     const {page = 1, limit = 20} = paginationOptions;
