@@ -1,22 +1,31 @@
 import InfiniteScroll from 'react-infinite-scroll-component';
-import Box from '@mui/material/Box';
 import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Post, SkeletonPost } from '../Post';
-import { getPosts } from '../../services/postService';
+import { getUserService } from '../../services/usersService';
 
 export default function PostsList() {
     const [posts, setPosts] = useState([]);
     const [page, setPage] = useState(2);
+    const [user, setUser] = useState();
     const [hasMore, setHasMore] = useState(true);
+    const navigate = useNavigate();
+    const { profileId = '' } = useParams();
     useEffect(() => {
-        getPosts(1)
-            .then((res) => res.data.posts)
-            .then((post) => { setPosts(posts.concat(post)); });
+        getUserService(profileId)
+            .then((res) => res.data.user)
+            .then((user2) => {
+                setUser(user2);
+                setPosts(posts.concat(user2.posts));
+            })
+            .catch(() => {
+                navigate('/');
+            });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const fetchData = async () => {
-        const res = await getPosts(page);
-        const post = res.data.posts;
+        const res = await getUserService(profileId, page);
+        const post = res.data.user.posts;
         if (post.length === 0) {
             setHasMore(false);
             return;
@@ -25,7 +34,9 @@ export default function PostsList() {
         setPage(page + 1);
     };
     return (
-        <Box>
+        !posts.length && user ? (
+            ''
+        ) : (
             <InfiniteScroll
               next={fetchData}
               hasMore={hasMore}
@@ -36,7 +47,6 @@ export default function PostsList() {
                     const {
                         title,
                         content,
-                        user,
                         _id: postId,
                     } = e;
                     const { _id: id } = user;
@@ -44,6 +54,7 @@ export default function PostsList() {
                         <Post
                           key={postId}
                           userId={id}
+                          postId={postId}
                           title={title}
                           content={content}
                           author={user.email}
@@ -51,6 +62,6 @@ export default function PostsList() {
                     );
                 })}
             </InfiniteScroll>
-        </Box>
+        )
     );
 }

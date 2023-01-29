@@ -8,6 +8,7 @@ import { SignUp } from './pages/RegisterPage';
 import { SignIn } from './pages/LoginPage';
 import { HomePage } from './pages/HomePage';
 import { ProfilePage } from './pages/ProfilePage';
+import { ErrorPage } from './pages/ErrorPage';
 
 function App() {
     const router = createBrowserRouter([
@@ -26,6 +27,10 @@ function App() {
         {
             path: '/profile/:profileId',
             element: <ProfilePage />,
+        },
+        {
+            path: '*',
+            element: <ErrorPage />,
         },
     ]);
     return (
