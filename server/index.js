@@ -10,12 +10,17 @@ import {serve, setup} from "swagger-ui-express";
 import {swaggerSpec} from "./config/swaggerSpec.js";
 import cors from "cors";
 
-dotenv.config();
-const app = express();
 
-const port = process.env.PORT || 3000;
+// process.env.SECRET_TOKEN = 9068dce0a41f2f7058ea9ddf791c622ec60a253abea9aa966f50852dcab7e3f89bdb0c01ac4e31b7bb3ee1181a4b6127e6a2e97417a651bbc0cb0a1f88265a4d
+
+
+dotenv.config()
+const app = express()
+
+const port = process.env.PORT || 8000;
 set("strictQuery", false);
-connect(process.env.MONGO_URL);
+connect(process.env.MONGO_URL) //mongodb://127.0.0.1:27017/blog-app
+
 
 app.use(cors({origin: 'http://localhost:3000', credentials: true}));
 app.use(express.json());
